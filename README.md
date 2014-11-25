@@ -66,6 +66,3 @@ and add the following line
 ```
 %plato-taverna-docker ALL=(root) NOPASSWD: /usr/bin/docker run --rm datascience/plato-taverna-docker\:latest executeworkflow *
 ```
-
-# License
-Plato Taverna Docker is released under [Apache version 2.0 license](LICENSE).
