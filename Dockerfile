@@ -45,9 +45,12 @@ RUN apt-get upgrade -y
 ## Install packages
 RUN apt-cache search -n 'digital-preservation.+' | grep -Po 'digital-preservation-.+(?= - )' | grep -v sanselan | grep -v digital-preservation-migration-office-jodconverter-doc2pdf | xargs apt-get install -y --force-yes
 
+## Clean apt cache
+RUN apt-get clean
+
 # Create taverna user
 RUN groupadd -g 2000 taverna
 RUN useradd -u 2000 -g 2000 -ms /bin/bash taverna
 USER taverna
 
-ENTRYPOINT ["executeworkflow"]
+CMD ["executeworkflow", "-help"]

@@ -21,10 +21,10 @@ Use `--no-cache` to avoid hitting docker's cache when rebuilding the image. This
 To execute the image run
 
 ```
-docker run --rm plato-taverna:latest [parameters]
+docker run --rm plato-taverna:latest executeworkflow [parameters]
 ```
 
-The image has Taverna's `executeworkflow` binary as [entrypoint](http://docs.docker.com/reference/builder/#entrypoint). Thus you can use the docker run command just like the Taverna Command Line Tool. To simplify this, you can add a script similar to [executeworkflow.sh](executeworkflow.sh) to your path.
+This runs Taverna's executeworkflow binary in the container just like a local Taverna Command Line Tool. To simplify this, you can add a script similar to [executeworkflow.sh](executeworkflow.sh) to your path.
 
 Taverna is executed as user `taverna` with UID `2000` and group `taverna` with GID `2000`.
 
@@ -35,23 +35,23 @@ docker run --rm -v /tmp:/tmp -v /home/taverna:/home/taverna plato-taverna:latest
 ```
 
 ## Interactive access
-To gain interactive access to the image, override the entrypoint
+To gain interactive access to the image, run `/bin/bash` in an interactive docker container
 
 ```
-docker run --rm -i -t --entrypoint /bin/bash plato-taverna:latest
+docker run --rm -i -t plato-taverna:latest /bin/bash
 ```
 
-You can also get root access by additionally overriding the user
+You can get root access by overriding the user
 
 ```
-docker run --rm -i -t --entrypoint /bin/bash -u 0 plato-taverna:latest
+docker run --rm -i -t -u root plato-taverna:latest /bin/bash
 ```
 
 ## Running as normal user
-Since docker requires root access to run a container normal users have to `sudo` the command. To avoid entering a password, you can explicitely allow executing `docker run` with this image and predefined parameters without a password, e.g. by creating a file `/etc/sudoers.d/docker-taverna` containing
+Since docker requires root access to run a container, normal users have to use `sudo`. To avoid entering a password, you can explicitely allow executing `docker run` with this image and predefined parameters without a password, e.g. by creating a file `/etc/sudoers.d/docker-taverna` containing
 
 ```
-%docker-taverna ALL=(root) NOPASSWD: /usr/bin/docker run --rm plato-taverna\:latest*
+%docker-taverna ALL=(root) NOPASSWD: /usr/bin/docker run --rm plato-taverna\:latest executeworkflow *
 ```
 
 # License
