@@ -30,14 +30,14 @@ To execute the image run
 docker run --rm datascience/plato-taverna-docker:latest executeworkflow [parameters]
 ```
 
-This runs Taverna's executeworkflow binary in the container just like a local Taverna Command Line Tool. To simplify this, you can add a script similar to [executeworkflow.sh](executeworkflow.sh) to your path.
+This runs Taverna's executeworkflow binary in the container just like the local Taverna Command Line Tool. To simplify this, you can add a [wrapper script](https://github.com/datascience/plato-taverna-docker/blob/master/executeworkflow.sh) to your path.
 
 Taverna is executed as user `taverna` with UID `2000` and group `taverna` with GID `2000`.
 
 Folders can be mounted into the container as volumes to provide access to files on the host. Since docker shares file UIDs/GIDs with the host, make sure that a user with UID `2000` and GID `2000` has access to relevant files.
 
 ```
-docker run --rm -v /tmp:/tmp -v /home/taverna:/home/taverna datascience/plato-taverna-docker:latest [parameters]
+docker run --rm -v /tmp:/tmp -v /home/taverna:/home/taverna datascience/plato-taverna-docker:latest executeworkflow [parameters]
 ```
 
 ## Interactive access
@@ -47,17 +47,24 @@ To gain interactive access to the image, run `/bin/bash` in an interactive docke
 docker run --rm -i -t datascience/plato-taverna-docker:latest /bin/bash
 ```
 
-You can get root access by overriding the user
+You can get root access by overriding the user set in the Dockerfile
 
 ```
 docker run --rm -i -t -u root datascience/plato-taverna-docker:latest /bin/bash
 ```
 
 ## Running as normal user
-Since docker requires root access to run a container, normal users have to use `sudo`. To avoid entering a password, you can explicitely allow executing `docker run` with this image and predefined parameters without a password, e.g. by creating a file `/etc/sudoers.d/docker-taverna` containing
+Docker requires root access to run a container. If your distribution supports `sudo` you can avoid entering a password by explicitely allowing `docker run` with this image and predefined parameters without a password. To allow members of the group `plato-taverna-docker` running the container **without password** create a file `/etc/sudoers.d/plato-taverna-docker` using
 
 ```
-%docker-taverna ALL=(root) NOPASSWD: /usr/bin/docker run --rm datascience/plato-taverna-docker\:latest executeworkflow *
+visudo -f /etc/sudoers.d/plato-taverna-docker
+```
+
+and add the following line
+
+
+```
+%plato-taverna-docker ALL=(root) NOPASSWD: /usr/bin/docker run --rm datascience/plato-taverna-docker\:latest executeworkflow *
 ```
 
 # License
